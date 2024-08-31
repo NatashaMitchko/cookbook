@@ -1,4 +1,4 @@
-from web.app import redis_client
+from app import redis_client
 
 from flask import Blueprint
 

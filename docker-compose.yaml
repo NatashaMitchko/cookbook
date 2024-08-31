@@ -13,7 +13,6 @@ services:
       - app-tier
     
   redis:
-    image: redis
     build:
       context: ./services/redis/
     ports:

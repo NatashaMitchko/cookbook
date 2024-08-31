@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_redis import FlaskRedis
 from flask_login import LoginManager
+import json
 
 redis_client = FlaskRedis()
 login_manager = LoginManager()
@@ -38,5 +39,5 @@ def healthcheck():
 
 @app.route("/redis-test")
 def redis_test():
-    redis_client.set("hello", "world")
+    redis_client.set("hello", json.dumps({"hello": "world"}))
     return redis_client.get("hello")

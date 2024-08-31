@@ -1,5 +1,7 @@
 # Cookbook Flask-Redis
 
+<!-- TODO: https://hub.docker.com/r/redis/redis-stack -->
+
 ## Recipe Data Structure
 
 ```json

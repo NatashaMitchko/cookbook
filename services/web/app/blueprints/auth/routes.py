@@ -1,5 +1,5 @@
-from web.app import login_manager
-from web.app import redis_client
+from app import login_manager
+from app import redis_client
 
 from flask import Blueprint, redirect, url_for
 from flask_login import login_required, logout_user
