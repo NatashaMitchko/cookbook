@@ -12,7 +12,7 @@ def list_routes():
     for rule in app.url_map.iter_rules():
         methods = ",".join(rule.methods)
         line = urllib.parse.urlparse(
-            "{:50s} {:20s} {}".format(rule.endpoint, methods, rule)
+            "{:20s} {}".format(rule.endpoint, methods, rule)
         )
         output.append(line)
 
