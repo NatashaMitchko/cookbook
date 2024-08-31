@@ -1,5 +1,6 @@
 from enum import Enum
 from typing import List
+import json
 
 from web.app import redis_client
 
@@ -28,7 +29,7 @@ class Recipe:
         self.status = status
 
     def save(self):
-        json = {
+        recipe = {
             "title": self.title,
             "slug": self.slug,
             "description": self.description,
@@ -37,4 +38,4 @@ class Recipe:
             "tags": list(self.tags),
             "status": self.status.name,
         }
-        redis_client.set(self.slug, json)
+        redis_client.set(self.slug, json.dumps(recipe))

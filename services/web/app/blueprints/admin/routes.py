@@ -1,11 +1,11 @@
-from flask import Blueprint
-from flask_login import login_required
+from flask import Blueprint, request, render_template
+# from flask_login import login_required
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="templates")
 
 
 @admin_bp.route("/")
-@login_required
+# @login_required
 def index():
     """
     Add new recipe button
@@ -16,19 +16,22 @@ def index():
     pass
 
 
-@admin_bp.route("/recipe")
-@login_required
+@admin_bp.route("/recipe/new/", methods=["GET", "POST"])
+# @login_required
 def recipe():
-    pass
-
+    if request.method == "GET":
+        return render_template("new_recipe.html", title="New Recipe")
+    else:
+        # do WTF forms
+        return "hello"
 
 @admin_bp.route("/preview/<id>/")
-@login_required
+# @login_required
 def preview_recipe(id):
     pass
 
 
-@admin_bp.route("/backup")
-@login_required
+@admin_bp.route("/backup/")
+# @login_required
 def generate_backup():
     pass

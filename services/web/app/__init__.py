@@ -10,6 +10,7 @@ login_manager = LoginManager()
 def create_app():
     app = Flask(__name__)
     app.config.from_object("app.config.Config")
+    app.url_map.strict_slashes = False
 
     redis_client.init_app(app)
     login_manager.init_app(app)
