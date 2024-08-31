@@ -2,9 +2,24 @@ from enum import Enum
 from typing import List
 import json
 
-from web.app import redis_client
+from flask_wtf import FlaskForm
+from wtforms import StringField, FieldList, RadioField, SubmitField
+from wtforms.validators import DataRequired, Optional
 
-class Status(Enum):
+from app import redis_client
+
+
+class RecipeForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    slug = StringField('Slug', validators=[DataRequired()])
+    description = StringField('Description', validators=[Optional()])
+    ingredients = FieldList(StringField("Ingredients"), min_entries=1)
+    steps = FieldList(StringField("Steps"), min_entries=1)
+    tags = FieldList(StringField("Tags"), min_entries=1)
+    status = RadioField("Status", choices=["Pending", "Published"])
+    submit = SubmitField("Add")
+
+class PublishStatus(Enum):
     PENDING = 1
     PUBLISHED = 2
 
@@ -18,7 +33,7 @@ class Recipe:
         ingredients: List[str],
         steps: List[str],
         tags: List[str],
-        status: Status,
+        status: PublishStatus,
     ) -> None:
         self.title = title
         self.slug = slug

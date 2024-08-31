@@ -1,5 +1,8 @@
-from flask import Blueprint, request, render_template
+from flask import Blueprint, render_template, redirect, url_for
+
 # from flask_login import login_required
+from app import redis_client
+from app.model.recipe import RecipeForm, Recipe, PublishStatus
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="templates")
 
@@ -19,16 +22,31 @@ def index():
 @admin_bp.route("/recipe/new/", methods=["GET", "POST"])
 # @login_required
 def recipe():
-    if request.method == "GET":
-        return render_template("new_recipe.html", title="New Recipe")
-    else:
-        # do WTF forms
-        return "hello"
+    form = RecipeForm()
+    if form.validate_on_submit():
+        r = Recipe(
+            title=form.title.data,
+            slug=form.slug.data,
+            description=form.description.data,
+            ingredients=[i.data for i in form.ingredients],
+            steps=[s.data for s in form.steps],
+            tags=[t.data for t in form.tags],
+            status=(
+                PublishStatus.PENDING
+                if form.status.data == "Pending"
+                else PublishStatus.PUBLISHED
+            )
+        )
+        r.save()
+        return redirect(url_for("admin_bp.preview_recipe", slug=r.slug))
+    return render_template("new_recipe.html", title="New Recipe", form=form)
 
-@admin_bp.route("/preview/<id>/")
+
+@admin_bp.route("/preview/<slug>/")
 # @login_required
-def preview_recipe(id):
-    pass
+def preview_recipe(slug):
+    recipe = redis_client.get(slug)
+    return recipe
 
 
 @admin_bp.route("/backup/")

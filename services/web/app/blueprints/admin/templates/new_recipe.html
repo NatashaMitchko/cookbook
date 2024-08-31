@@ -1,15 +1,37 @@
 {% extends "base.html" %}
 
 {% block content %}
-<form>
-    <label for="title">Title:</label><br>
-    <input type="text" id="title" name="title"><br>
+<form method="POST" action="" novalidate>
+    {{ form.hidden_tag() }}
 
-    <label for="slug">Slug:</label><br>
-    <input type="text" id="slug" name="slug">
-
-    <label for="desc">Description:</label><br>
-    <input type="text" id="desc" name="description">
+    {{ form.title.label }}<br>
+    {{ form.title }}
+    <br>
+    {{ form.slug.label }}<br>
+    {{ form.slug }}
+    <br>
+    {{ form.description.label }}<br>
+    {{ form.description }}
+    <br>
+    {% for nested in form.ingredients %}<br>
+        {{ nested.label }}<br>
+        {{ nested }}
+    {% endfor %}
+    <br>
+    {% for nested in form.steps %}<br>
+        {{ nested.label }}<br>
+        {{ nested }}
+    {% endfor %}
+    <br>
+    {% for nested in form.tags %}<br>
+        {{ nested.label }}<br>
+        {{ nested }}
+    {% endfor %}
+    <br>
+    {{ form.status.label }}<br>
+    {{ form.status }}
+    <br>
+    {{ form.submit() }}
 
 </form>
 {% endblock %}
