@@ -49,7 +49,7 @@ def recipe():
         )
         r.save()
         return redirect(url_for("admin_bp.preview_recipe", slug=r.slug))
-    return render_template("new_recipe.html", title="New Recipe", form=form)
+    return render_template("new_recipe.html", title="New Recipe", edit=False, form=form)
 
 
 @admin_bp.route("/recipe/edit/<slug>/", methods=["GET", "POST"])
@@ -81,7 +81,7 @@ def edit_recipe(slug):
         )
         r.save()
         return redirect(url_for("admin_bp.preview_recipe", slug=r.slug))
-    return render_template("edit_recipe.html", title="Edit Recipe", form=form)
+    return render_template("new_recipe.html", title="Edit Recipe", edit=True, form=form)
 
 
 @admin_bp.route("/preview/<slug>/")

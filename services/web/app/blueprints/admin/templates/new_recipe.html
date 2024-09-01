@@ -10,7 +10,11 @@
             {{ form.title(class_="form-control") }}
             <br>
             {{ form.slug.label(class_="form-label") }}<br>
-            {{ form.slug(class_="form-control") }}
+            {% if edit %}
+                {{ form.slug(disabled=True, class_="form-control") }}
+            {% else %}
+                {{ form.slug(class_="form-control") }}
+            {% endif %}
             <br>
             {{ form.description.label(class_="form-label") }}<br>
             {{ form.description(class_="form-control") }}
