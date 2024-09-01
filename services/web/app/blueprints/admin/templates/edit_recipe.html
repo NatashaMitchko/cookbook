@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form method="POST" action="" novalidate>
+    {{ form.hidden_tag() }}
+
+    {{ form.title.label }}<br>
+    {{ form.title }}
+    <br>
+    {{ form.slug.label }}<br>
+    {{ form.slug(disabled=True) }}
+    <br>
+    {{ form.description.label }}<br>
+    {{ form.description }}
+    <br>
+    {% for nested in form.ingredients %}<br>
+        {{ nested.label }}<br>
+        {{ nested }}
+    {% endfor %}
+    <br>
+    {% for nested in form.steps %}<br>
+        {{ nested.label }}<br>
+        {{ nested }}
+    {% endfor %}
+    <br>
+    {% for nested in form.tags %}<br>
+        {{ nested.label }}<br>
+        {{ nested }}
+    {% endfor %}
+    <br>
+    {{ form.status.label }}<br>
+    {{ form.status }}
+    <br>
+    {{ form.submit() }}
+
+</form>
+{% endblock %}

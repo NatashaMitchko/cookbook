@@ -17,7 +17,7 @@ class RecipeForm(FlaskForm):
     steps = FieldList(StringField("Steps"), min_entries=1)
     tags = FieldList(StringField("Tags"), min_entries=1)
     status = RadioField("Status", choices=["Pending", "Published"])
-    submit = SubmitField("Add")
+    submit = SubmitField("Save")
 
 class PublishStatus(Enum):
     PENDING = 1
