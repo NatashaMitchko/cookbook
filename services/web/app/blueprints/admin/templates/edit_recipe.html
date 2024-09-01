@@ -13,20 +13,23 @@
     {{ form.description.label }}<br>
     {{ form.description }}
     <br>
+    {{ form.ingredients.label }}<br>
     {% for nested in form.ingredients %}<br>
-        {{ nested.label }}<br>
         {{ nested }}
     {% endfor %}
+    {{ form.add_ingredient }}
     <br>
+    {{ form.steps.label }}<br>
     {% for nested in form.steps %}<br>
-        {{ nested.label }}<br>
         {{ nested }}
     {% endfor %}
+    {{ form.add_step }}
     <br>
+    {{ form.tags.label }}<br>
     {% for nested in form.tags %}<br>
-        {{ nested.label }}<br>
         {{ nested }}
     {% endfor %}
+    {{ form.add_tag }}
     <br>
     {{ form.status.label }}<br>
     {{ form.status }}

@@ -25,7 +25,15 @@ def index():
 # @login_required
 def recipe():
     form = RecipeForm()
-    if form.validate_on_submit():
+
+    if form.add_ingredient.data:
+        form.ingredients.append_entry(None)
+    elif form.add_step.data:
+        form.steps.append_entry(None)
+    elif form.add_tag.data:
+        form.tags.append_entry(None)
+
+    elif form.validate_on_submit():
         r = Recipe(
             title=form.title.data,
             slug=form.slug.data,
@@ -49,7 +57,15 @@ def edit_recipe(slug):
     recipe = redis_client.get(slug)
     json_r = json.loads(recipe)
     form = RecipeForm(data=json_r)
-    if form.validate_on_submit():
+
+    if form.add_ingredient.data:
+        form.ingredients.append_entry(None)
+    elif form.add_step.data:
+        form.steps.append_entry(None)
+    elif form.add_tag.data:
+        form.tags.append_entry(None)
+
+    elif form.validate_on_submit():
         r = Recipe(
             title=form.title.data,
             slug=slug,

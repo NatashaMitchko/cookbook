@@ -4,34 +4,93 @@
 <form method="POST" action="" novalidate>
     {{ form.hidden_tag() }}
 
-    {{ form.title.label }}<br>
-    {{ form.title }}
-    <br>
-    {{ form.slug.label }}<br>
-    {{ form.slug }}
-    <br>
-    {{ form.description.label }}<br>
-    {{ form.description }}
-    <br>
-    {% for nested in form.ingredients %}<br>
-        {{ nested.label }}<br>
-        {{ nested }}
+    <div class="row justify-content-center">
+        <div class="col-8">
+            {{ form.title.label(class_="form-label") }}<br>
+            {{ form.title(class_="form-control") }}
+            <br>
+            {{ form.slug.label(class_="form-label") }}<br>
+            {{ form.slug(class_="form-control") }}
+            <br>
+            {{ form.description.label(class_="form-label") }}<br>
+            {{ form.description(class_="form-control") }}
+            <br>
+            {% for subfield in form.status %}
+                {{ subfield(class_="form-check-input") }}
+                {{ subfield.label(class_="form-check-label") }}
+            {% endfor %}
+            <!-- {{ form.status.label(class_="form-label") }}<br>
+            {{ form.status }} -->
+        </div>
+    </div>
+
+    <!-- ingredients  -->
+    <div class="row justify-content-center">
+        <div class="col-8 gy-5">    
+            {{ form.ingredients.label(class_="form-label") }}
+        </div>
+    </div>
+    {% for i in form.ingredients %}
+    <div class="row justify-content-center">
+        <div class="col-8 g-3">    
+            {{ i(class_="form-control") }}
+        </div>
+    </div>
     {% endfor %}
-    <br>
-    {% for nested in form.steps %}<br>
-        {{ nested.label }}<br>
-        {{ nested }}
+    <div class="row justify-content-center">
+        <div class="d-grid gap-2 col-8 mx-auto g-3">    
+            {{ form.add_ingredient(class_="btn btn-outline-secondary") }}
+        </div>
+    </div>
+
+    <!-- Steps  -->
+    <div class="row justify-content-center">
+        <div class="col-8 g-3">
+            {{ form.steps.label(class_="form-label") }}
+        </div>
+    </div>
+    {% for s in form.steps %}
+    <div class="row justify-content-center">
+        <div class="col-8 g-3">
+            {{ s(class_="form-control") }}
+        </div>
+    </div>
     {% endfor %}
-    <br>
-    {% for nested in form.tags %}<br>
-        {{ nested.label }}<br>
-        {{ nested }}
+    <div class="row justify-content-center">
+        <div class="d-grid gap-2 col-8 mx-auto g-3">
+        {{ form.add_step(class_="btn btn-outline-secondary") }}
+        </div>
+    </div>
+    
+    <!-- Tags -->
+    <div class="row justify-content-center">
+        <div class="col-8 g-3">    
+            {{ form.tags.label(class_="form-label") }}
+        </div>
+    </div>
+    {% for t in form.tags %}
+    <div class="row justify-content-center">
+        <div class="col-8 g-3">    
+            {{ t(class_="form-control") }}
+        </div>
+    </div>
     {% endfor %}
-    <br>
-    {{ form.status.label }}<br>
-    {{ form.status }}
-    <br>
-    {{ form.submit() }}
+    <div class="row justify-content-center">
+        <div class="d-grid gap-2 col-8 mx-auto g-3">
+            {{ form.add_tag(class_="btn btn-outline-secondary") }}
+        </div>
+    </div>
+
+    
+    <div class="row justify-content-center">
+        <div class="d-grid gap-2 col-8 mx-auto g-3">
+            {{ form.submit(class_="btn btn-primary btn-block") }}
+        </div>
+    </div>
+
+    <div class="row">
+        <div style="height: 500px;"></div>
+    </div>
 
 </form>
 {% endblock %}

@@ -14,8 +14,11 @@ class RecipeForm(FlaskForm):
     slug = StringField('Slug', validators=[DataRequired()])
     description = StringField('Description', validators=[Optional()])
     ingredients = FieldList(StringField("Ingredients"), min_entries=1)
+    add_ingredient = SubmitField("Add Ingredient")
     steps = FieldList(StringField("Steps"), min_entries=1)
+    add_step = SubmitField("Add Step")
     tags = FieldList(StringField("Tags"), min_entries=1)
+    add_tag = SubmitField("Add Tag")
     status = RadioField("Status", choices=["Pending", "Published"])
     submit = SubmitField("Save")
 
