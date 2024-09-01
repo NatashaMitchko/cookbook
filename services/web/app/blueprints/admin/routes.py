@@ -4,7 +4,7 @@ from flask import Blueprint, render_template, redirect, url_for
 
 # from flask_login import login_required
 from app import redis_client
-from app.model.recipe import RecipeForm, Recipe, PublishStatus
+from app.model.recipe import RecipeForm, Recipe, PublishStatus, get_recipe_json
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="templates")
 
@@ -54,8 +54,7 @@ def recipe():
 
 @admin_bp.route("/recipe/edit/<slug>/", methods=["GET", "POST"])
 def edit_recipe(slug):
-    recipe = redis_client.get(slug)
-    json_r = json.loads(recipe)
+    json_r = get_recipe_json(slug)
     form = RecipeForm(data=json_r)
 
     if form.add_ingredient.data:
@@ -87,9 +86,7 @@ def edit_recipe(slug):
 @admin_bp.route("/preview/<slug>/")
 # @login_required
 def preview_recipe(slug):
-    recipe = redis_client.get(slug)
-    r = json.loads(recipe)
-    return r
+    return get_recipe_json(slug)
 
 
 @admin_bp.route("/backup/")

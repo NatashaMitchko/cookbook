@@ -9,10 +9,15 @@ from wtforms.validators import DataRequired, Optional
 from app import redis_client
 
 
+class PublishStatus(Enum):
+    PENDING = 1
+    PUBLISHED = 2
+
+
 class RecipeForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired()])
-    slug = StringField('Slug', validators=[DataRequired()])
-    description = StringField('Description', validators=[Optional()])
+    title = StringField("Title", validators=[DataRequired()])
+    slug = StringField("Slug", validators=[DataRequired()])
+    description = StringField("Description", validators=[Optional()])
     ingredients = FieldList(StringField("Ingredients"), min_entries=1)
     add_ingredient = SubmitField("Add Ingredient")
     steps = FieldList(StringField("Steps"), min_entries=1)
@@ -21,10 +26,6 @@ class RecipeForm(FlaskForm):
     add_tag = SubmitField("Add Tag")
     status = RadioField("Status", choices=["Pending", "Published"])
     submit = SubmitField("Save")
-
-class PublishStatus(Enum):
-    PENDING = 1
-    PUBLISHED = 2
 
 
 class Recipe:
@@ -56,4 +57,24 @@ class Recipe:
             "tags": list(self.tags),
             "status": self.status.name,
         }
-        redis_client.set(self.slug, json.dumps(recipe))
+        redis_client.set(f"recipe:{self.slug}", json.dumps(recipe))
+
+
+def get_recipe_obj(slug) -> Recipe:
+    recipe_str = redis_client.get(f"recipe:{slug}")
+    r = json.loads(recipe_str)
+    return Recipe(
+        title=r.get("title"),
+        slug=r.get("slug"),
+        description=r.get("description"),
+        ingredients=r.get("ingredients"),
+        steps=r.get("steps"),
+        tags=r.get("tags"),
+        status=r.get("status") # TODO: smth
+    )
+
+def get_recipe_json(slug) -> dict:
+    recipe_str = redis_client.get(f"recipe:{slug}")
+    if not recipe_str:
+        return {}
+    return json.loads(recipe_str)
