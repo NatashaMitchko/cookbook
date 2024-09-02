@@ -1,10 +1,13 @@
-import json
-
 from flask import Blueprint, render_template, redirect, url_for
 
 # from flask_login import login_required
-from app import redis_client
-from app.model.recipe import RecipeForm, Recipe, PublishStatus, get_recipe_json
+from app.model.recipe import (
+    RecipeForm,
+    Recipe,
+    PublishStatus,
+    get_recipe_json,
+    get_all_recipes,
+)
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="templates")
 
@@ -18,7 +21,8 @@ def index():
     List of published recipies w/ edit button
     Button to generate backup
     """
-    pass
+    recipes = get_all_recipes()
+    return render_template("admin_index.html", title="Admin Dashboard", recipes=recipes)
 
 
 @admin_bp.route("/recipe/new/", methods=["GET", "POST"])

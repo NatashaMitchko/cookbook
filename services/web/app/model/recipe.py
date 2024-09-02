@@ -8,7 +8,6 @@ from wtforms.validators import DataRequired, Optional
 
 from app import redis_client
 
-
 class PublishStatus(Enum):
     PENDING = 1
     PUBLISHED = 2
@@ -70,7 +69,19 @@ def get_recipe_obj(slug) -> Recipe:
         ingredients=r.get("ingredients"),
         steps=r.get("steps"),
         tags=r.get("tags"),
-        status=r.get("status") # TODO: smth
+        status=r.get("status"),  # TODO: smth
+    )
+
+def get_recipe_object(r) -> Recipe:
+    status = PublishStatus.PENDING if r.get("status") == "Pending" else PublishStatus.PUBLISHED
+    return Recipe(
+        title=r.get("title"),
+        slug=r.get("slug"),
+        description=r.get("description"),
+        ingredients=r.get("ingredients"),
+        steps=r.get("steps"),
+        tags=r.get("tags"),
+        status=status
     )
 
 def get_recipe_json(slug) -> dict:
@@ -78,3 +89,18 @@ def get_recipe_json(slug) -> dict:
     if not recipe_str:
         return {}
     return json.loads(recipe_str)
+
+def get_all_recipes() -> List[Recipe]:
+    _, keys = redis_client.scan(match="recipe:*")
+    data = redis_client.mget(keys)
+    res = []
+    for d in data:
+        r_dict = json.loads(d.decode("utf-8"))
+        r = get_recipe_object(r_dict)
+        res.append(r)
+    return res
+
+
+def get_recipe_slugs():
+    _, keys = redis_client.scan(match="recipe:*")
+    return [slug.decode("utf-8")[7:] for slug in keys]

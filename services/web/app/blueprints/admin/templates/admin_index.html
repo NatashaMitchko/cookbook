@@ -1,0 +1,46 @@
+{% extends "admin_base.html" %}
+
+{% block admin_content %}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-10 gy-3">
+            <table class="table table-bordered border-primary">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Slug</th>
+                        <th>Description</th>
+                        <th>Tags</th>
+                        <th>Status</th>
+                        <th>Preview</th>
+                        <th>Edit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for r in recipes %}
+                    <tr>
+                        <td>{{ r.title }}</td>
+                        <td>
+                            {% if r.status.name == 'PUBLISHED' %}
+                                <a href="{{ url_for('recipe_bp.render_recipe', slug=r.slug) }}">{{ r.slug }}</a>
+                            {% else %}
+                                {{ r.slug }}
+                            {% endif %}
+                        </td>
+                        <td>{{ r.description }}</td>
+                        <td>
+                            {% for t in r.tags %}
+                                <span class="badge rounded-pill bg-secondary">{{ t }}</span>
+                            {% endfor %}
+                        </td>
+                        <td>{{ r.status.name }}</td>
+                        <td><a href="{{ url_for('admin_bp.preview_recipe', slug=r.slug) }}">Preview</a></td>
+                        <td><a class="btn btn-preview" href="{{ url_for('admin_bp.edit_recipe', slug=r.slug) }}">Edit</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
