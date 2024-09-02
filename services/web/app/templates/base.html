@@ -9,6 +9,7 @@
     <nav class="navbar navbar-light" style="background-color: #F438AE;">
       <div class="container-fluid">
         <h1 class="text-3xl font-bold">{{ title }}</h1>
+        <a class="d-flex btn btn-outline-published" href="{{ url_for('auth_bp.login') }}">Admin Login</a>
       </div>
     </nav>
     {% block content %}{% endblock %}

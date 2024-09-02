@@ -1,16 +1,21 @@
 from enum import Enum
 from typing import List
 import json
+import re
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, FieldList, RadioField, SubmitField
-from wtforms.validators import DataRequired, Optional
+from wtforms.validators import DataRequired, Optional, ValidationError
 
 from app import redis_client
 
 class PublishStatus(Enum):
     PENDING = 1
     PUBLISHED = 2
+
+# def slug_check(form, field):
+#     if not re.search("^[a-zA-Z]*(-?[a-zA-Z]+)*$", field.data):
+#         raise ValidationError("Slug must not have spaces (e.g. this-is-a-slug)")
 
 
 class RecipeForm(FlaskForm):
@@ -48,7 +53,7 @@ class Recipe:
 
     def save(self):
         recipe = {
-            "title": self.title,
+            "title": self.title.title(),
             "slug": self.slug,
             "description": self.description,
             "ingredients": self.ingredients,
@@ -58,22 +63,12 @@ class Recipe:
         }
         redis_client.set(f"recipe:{self.slug}", json.dumps(recipe))
 
-
-def get_recipe_obj(slug) -> Recipe:
-    recipe_str = redis_client.get(f"recipe:{slug}")
-    r = json.loads(recipe_str)
-    return Recipe(
-        title=r.get("title"),
-        slug=r.get("slug"),
-        description=r.get("description"),
-        ingredients=r.get("ingredients"),
-        steps=r.get("steps"),
-        tags=r.get("tags"),
-        status=r.get("status"),  # TODO: smth
-    )
+def get_recipe(slug) -> Recipe:
+    r_json = get_recipe_json(slug)
+    return get_recipe_object(r_json)
 
 def get_recipe_object(r) -> Recipe:
-    status = PublishStatus.PENDING if r.get("status") == "Pending" else PublishStatus.PUBLISHED
+    status = PublishStatus.PENDING if r.get("status") == "PENDING" else PublishStatus.PUBLISHED
     return Recipe(
         title=r.get("title"),
         slug=r.get("slug"),

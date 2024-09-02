@@ -1,6 +1,6 @@
-from app import redis_client
+from flask import Blueprint, render_template
 
-from flask import Blueprint
+from app.model.recipe import get_recipe
 
 recipe_bp = Blueprint("recipe_bp", __name__, template_folder="templates")
 
@@ -15,5 +15,5 @@ def index():
 
 @recipe_bp.route("/<slug>/")
 def render_recipe(slug):
-    recipe = redis_client.get(slug)
-    return recipe
+    recipe = get_recipe(slug)
+    return render_template("recipe.html", title=recipe.title, recipe=recipe)

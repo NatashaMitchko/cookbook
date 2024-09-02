@@ -4,11 +4,11 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-md-10 gy-3">
-            <table class="table table-bordered border-primary">
+            <table class="table table-bordered border-secondary">
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Slug</th>
+                        <th>Slug/ Live Link</th>
                         <th>Description</th>
                         <th>Tags</th>
                         <th>Status</th>
@@ -18,7 +18,6 @@
                 </thead>
                 <tbody>
                     {% for r in recipes %}
-                    <tr>
                         <td>{{ r.title }}</td>
                         <td>
                             {% if r.status.name == 'PUBLISHED' %}

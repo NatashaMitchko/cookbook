@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <form method="POST" action="" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="row justify-content-center">
+            <div class="col-8 g-3">
+                {{ form.username.label(class_="form-label") }}<br>
+                {{ form.username(class_="form-control") }}
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-8 g-3">
+                {{ form.password.label(class_="form-label") }}<br>
+                {{ form.password(class_="form-control") }}
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="d-grid gap-2 col-8 mx-auto g-3">
+                {{ form.submit(class_="btn btn-primary btn-block") }}
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
