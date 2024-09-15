@@ -1,6 +1,6 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, flash
 
-# from flask_login import login_required
+from flask_login import login_required, current_user
 from app.model.recipe import (
     RecipeForm,
     Recipe,
@@ -13,7 +13,7 @@ admin_bp = Blueprint("admin_bp", __name__, template_folder="templates")
 
 
 @admin_bp.route("/")
-# @login_required
+@login_required
 def index():
     """
     Add new recipe button
@@ -26,7 +26,7 @@ def index():
 
 
 @admin_bp.route("/recipe/new/", methods=["GET", "POST"])
-# @login_required
+@login_required
 def recipe():
     form = RecipeForm()
 
@@ -57,6 +57,7 @@ def recipe():
 
 
 @admin_bp.route("/recipe/edit/<slug>/", methods=["GET", "POST"])
+@login_required
 def edit_recipe(slug):
     json_r = get_recipe_json(slug)
     form = RecipeForm(data=json_r)
@@ -88,7 +89,7 @@ def edit_recipe(slug):
 
 
 @admin_bp.route("/preview/<slug>/")
-# @login_required
+@login_required
 def preview_recipe(slug):
     return get_recipe_json(slug)
 

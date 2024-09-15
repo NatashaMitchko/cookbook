@@ -9,7 +9,13 @@
     <nav class="navbar navbar-light" style="background-color: #F438AE;">
       <div class="container-fluid">
         <h1 class="text-3xl font-bold">{{ title }}</h1>
-        <a class="d-flex btn btn-outline-published" href="{{ url_for('auth_bp.login') }}">Admin Login</a>
+        
+        {% if current_user.is_authenticated %}
+          <a class="d-flex btn btn-outline-published" href="{{ url_for('auth_bp.logout') }}">Logout</a>
+        {% else %}
+          <a class="btn btn-outline-published" href="{{ url_for('auth_bp.login') }}">Login</a>
+          <a class="btn btn-outline-published" href="{{ url_for('auth_bp.register') }}">Admin Register</a>
+        {% endif %}
       </div>
     </nav>
     {% block content %}{% endblock %}

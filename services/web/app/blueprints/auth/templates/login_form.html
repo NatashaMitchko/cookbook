@@ -1,6 +1,7 @@
-{% extends "base.html" %}
+{% extends "admin_base.html" %}
 
-{% block content %}
+{% block admin_content %}
+
 <div class="container-fluid">
     <form method="POST" action="" novalidate>
         {{ form.hidden_tag() }}
@@ -16,7 +17,7 @@
                 {{ form.password(class_="form-control") }}
             </div>
         </div>
-        <div class="row justify-content-center">
+        <div class="row justify-content-right">
             <div class="d-grid gap-2 col-8 mx-auto g-3">
                 {{ form.submit(class_="btn btn-primary btn-block") }}
             </div>
