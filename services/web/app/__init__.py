@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_redis import FlaskRedis
 from flask_login import LoginManager
 import json
@@ -34,7 +34,7 @@ def create_app():
 app = create_app()
 
 
-@app.route("/")
+@app.route("/healthcheck")
 def healthcheck():
     return {"ping": "pong"}
 

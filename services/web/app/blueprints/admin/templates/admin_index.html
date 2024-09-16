@@ -1,40 +1,71 @@
-{% extends "admin_base.html" %}
+{% extends "base.html" %}
 
-{% block admin_content %}
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Slug/ Live Link</th>
-      <th>Description</th>
-      <th>Tags</th>
-      <th>Status</th>
-      <th>Preview</th>
-      <th>Edit</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for r in recipes %}
-    <td>{{ r.title }}</td>
-    <td>
+{% block content %}
+<div class="container-desktop">
+  <table id="admin-table" class="display">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Slug/ Live Link</th>
+        <th>Description</th>
+        <th>Tags</th>
+        <th>Status</th>
+        <th>Preview</th>
+        <th>Edit</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in recipes %}
+      <td>{{ r.title }}</td>
+      <td>
+        {% if r.status.name == 'PUBLISHED' %}
+        <a href="{{ url_for('recipe_bp.render_recipe', slug=r.slug) }}">{{ r.slug }}</a>
+        {% else %}
+        {{ r.slug }}
+        {% endif %}
+      </td>
+      <td>{{ r.description }}</td>
+      <td>
+        {% for t in r.tags %}
+        <span class="tag">{{ t }}</span>
+        {% endfor %}
+      </td>
       {% if r.status.name == 'PUBLISHED' %}
-      <a href="{{ url_for('recipe_bp.render_recipe', slug=r.slug) }}">{{ r.slug }}</a>
+      <td><span class="card-status">{{ r.status.name }}</span></td>
       {% else %}
-      {{ r.slug }}
-      {% endif %}
-    </td>
-    <td>{{ r.description }}</td>
-    <td>
-      {% for t in r.tags %}
-      <span class="badge rounded-pill bg-secondary">{{ t }}</span>
+      <td class="status--pending"><span class="card-status">{{ r.status.name }}</span></td>
+        {% endif %}
+      <td><a href="{{ url_for('admin_bp.preview_recipe', slug=r.slug) }}">Preview</a></td>
+      <td><a href="{{ url_for('admin_bp.edit_recipe', slug=r.slug) }}">Edit</a></td>
+      </tr>
       {% endfor %}
-    </td>
-    <td>{{ r.status.name }}</td>
-    <td><a href="{{ url_for('admin_bp.preview_recipe', slug=r.slug) }}">Preview</a></td>
-    <td><a href="{{ url_for('admin_bp.edit_recipe', slug=r.slug) }}">Edit</a></td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </tbody>
+  </table>
+</div>
 
+<div class="container-mobile">
+  {% for r in recipes %}
+    <div class="card">
+      <p class="card-title"><a href="{{ url_for('admin_bp.edit_recipe', slug=r.slug) }}">{{ r.title }}</a></p>
+      {% if r.status.name == 'PUBLISHED' %}
+        <div class="card-details">
+          <p class="card-link"><a href="{{ url_for('recipe_bp.render_recipe', slug=r.slug) }}">View</a></p>
+          <p class="card-status">{{ r.status.name }}</p>
+        </div>
+        {% else %}
+        <div class="card-details status--pending">
+          <p class="card-status">{{ r.status.name }}</p>
+        </div>
+        {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
+{% block scripts%}
+<script>
+  $(document).ready(function () {
+    $('#admin-table').DataTable();
+  });
+</script>
 {% endblock %}
