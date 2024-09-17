@@ -12,21 +12,18 @@
   <body>
     <header class="header">
       <h1>{{ title }}</h1>
-      <!-- {% if current_user.is_authenticated %}
-      <a href="{{ url_for('auth_bp.logout') }}">Logout</a>
-      {% else %}
-      <a href="{{ url_for('auth_bp.login') }}">Login</a>
-      <a href="{{ url_for('auth_bp.register') }}">Admin Register</a>
-      {% endif %} -->
       <nav>
         {% if request.url_rule.endpoint != "admin_bp.index" %}
         <a class="btn" href="{{ url_for('admin_bp.index')}}">Dashboard</a>
         {% else %}
         <a class="btn" href="{{ url_for('recipe_bp.index')}}">Cookbook Home</a>
+        <a class="btn" href="{{ url_for('admin_bp.download')}}">Download</a>
         {% endif %}
         <a class="btn" href="{{ url_for('admin_bp.recipe') }}">New Recipe</a>
         {% if current_user.is_authenticated %}
         <a class="btn" href="{{ url_for('auth_bp.logout') }}">Logout</a>
+        {% else %}
+        <a class="btn" href="{{ url_for('auth_bp.login') }}">Login</a>
         {% endif %}
       </nav>
     </header>

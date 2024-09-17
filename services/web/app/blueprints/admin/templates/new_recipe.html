@@ -2,7 +2,7 @@
 
 {% block content %}
 <div>
-  <form method="POST" action="" novalidate>
+  <form method="POST" action="" novalidate class="form">
     {{ form.hidden_tag() }}
 
       {{ form.title.label(class_="form-label") }}
@@ -17,11 +17,13 @@
       
       {{ form.description.label(class_="form-label") }}
       {{ form.description(class_="form-control") }}
-      
+      <fieldset>
+        <legend>Recipe Status</legend>
       {% for subfield in form.status %}
         {{ subfield(class_="form-check-input") }}
         {{ subfield.label(class_="form-check-label") }}
       {% endfor %}
+      </fieldset>
     
 
     <!-- ingredients  -->

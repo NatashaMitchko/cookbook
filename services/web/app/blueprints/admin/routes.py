@@ -1,4 +1,8 @@
-from flask import Blueprint, render_template, redirect, url_for, flash
+from io import BytesIO
+import json
+from datetime import datetime
+
+from flask import Blueprint, render_template, redirect, url_for, send_file
 
 from flask_login import login_required
 from app.model.recipe import (
@@ -6,21 +10,16 @@ from app.model.recipe import (
     Recipe,
     PublishStatus,
     get_recipe_json,
+    get_all_json_recipies,
     get_all_recipes,
+    delete_recipe,
 )
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="templates")
 
 
 @admin_bp.route("/")
-@login_required
 def index():
-    """
-    Add new recipe button
-    List with pending recipies for preview w/ preview and edit button
-    List of published recipies w/ edit button
-    Button to generate backup
-    """
     recipes = get_all_recipes()
     return render_template("admin_index.html", title="Admin Dashboard", recipes=recipes)
 
@@ -52,7 +51,7 @@ def recipe():
             ),
         )
         r.save()
-        return redirect(url_for("admin_bp.preview_recipe", slug=r.slug))
+        return redirect(url_for("admin_bp.index", slug=r.slug))
     return render_template("new_recipe.html", title="New Recipe", edit=False, form=form)
 
 
@@ -84,17 +83,37 @@ def edit_recipe(slug):
             ),
         )
         r.save()
-        return redirect(url_for("admin_bp.preview_recipe", slug=r.slug))
+        return redirect(url_for("admin_bp.index", slug=r.slug))
     return render_template("new_recipe.html", title="Edit Recipe", edit=True, form=form)
+
+
+@admin_bp.route("/download")
+@login_required
+def download():
+    date = datetime.today().strftime("%Y-%m-%d")
+    filename = f"{date}-recipe-download.json"
+    recipes = get_all_json_recipies()
+    byte_obj = BytesIO()
+    for r in recipes:
+        byte_obj.write(json.dumps(r).encode())
+        byte_obj.write(b"\n")
+    byte_obj.seek(0)
+    return send_file(
+        byte_obj,
+        download_name=filename,
+        mimetype="application/json",
+        as_attachment=True,
+    )
+
+
+@admin_bp.route("/delete/<slug>")
+@login_required
+@login_required
+def delete(slug):
+    delete_recipe(slug)
 
 
 @admin_bp.route("/preview/<slug>/")
 @login_required
 def preview_recipe(slug):
     return get_recipe_json(slug)
-
-
-@admin_bp.route("/backup/")
-# @login_required
-def generate_backup():
-    pass

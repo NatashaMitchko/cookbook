@@ -16,6 +16,7 @@
     </thead>
     <tbody>
       {% for r in recipes %}
+      <tr>
       <td>{{ r.title }}</td>
       <td>
         {% if r.status.name == 'PUBLISHED' %}
@@ -68,4 +69,6 @@
     $('#admin-table').DataTable();
   });
 </script>
+
+
 {% endblock %}

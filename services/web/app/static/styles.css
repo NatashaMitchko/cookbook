@@ -41,6 +41,7 @@ body {
     --redwood: #b02a29;
     --macadamia: #f6f0d8;
     --offwhite: #fffef9;
+    --blush: #ffe6eb;
     --blue: #113047;
     --light-blue: #7390b9;
 
@@ -139,8 +140,47 @@ a {
     border-radius: 9999px;
     display: inline-block;
     color: var(--offwhite);
-    padding: 3px 7px;
+    padding: 1px 10px;
     font-size: 14px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    margin: 0 auto;
+}
+
+fieldset {
+    margin-top: 10px;
+    border: 1px solid var(--light-blue);
+}
+
+.form label,
+.form legend {
+    margin-top: 10px;
+    font-weight: 700;
+}
+
+.form input[type="text"] {
+    margin-bottom: 5px;
+    background: var(--offwhite);
+    border: 1px solid var(--light-blue);
+    padding: 5px 10px;
+}
+
+.form input[type="text"]:focus {
+    outline-color: var(--blue);
+}
+
+.form input[type="submit"] {
+    background: var(--blush);
+    margin-bottom: 5px;
+    cursor: pointer;
+}
+
+.form input[type="submit"]:hover {
+    background: var(--blue);
 }
 
 @media (min-width: 768px) {
