@@ -161,7 +161,7 @@ a {
 }
 
 fieldset {
-    margin-top: 10px;
+    margin: 10px 0;
     border: 1px solid var(--light-blue);
 }
 

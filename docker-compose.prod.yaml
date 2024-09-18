@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile.prod
     command: gunicorn -w 4 -b 0.0.0.0:8000 app:app
     volumes:
-      - ./services/web/:/usr/src/cookbook/
+      - backup_volume:/home/app/cookbook/app/backup
     expose:
       - 8000
     env_file:
@@ -33,3 +33,6 @@ services:
 networks:
   app-tier:
     driver: bridge
+
+volumes:
+  backup_volume:

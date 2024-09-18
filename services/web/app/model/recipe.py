@@ -13,14 +13,13 @@ class PublishStatus(Enum):
     PENDING = 1
     PUBLISHED = 2
 
-# def slug_check(form, field):
-#     if not re.search("^[a-zA-Z]*(-?[a-zA-Z]+)*$", field.data):
-#         raise ValidationError("Slug must not have spaces (e.g. this-is-a-slug)")
-
+def slug_check(form, field):
+    if not re.search("^[a-zA-Z]*(-?[a-zA-Z]+)*$", field.data):
+        raise ValidationError("Slug must not have spaces (e.g. this-is-a-slug)")
 
 class RecipeForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
-    slug = StringField("Slug", validators=[DataRequired()])
+    slug = StringField("Slug", validators=[DataRequired(), slug_check])
     description = StringField("Description", validators=[Optional()])
     ingredients = FieldList(StringField("Ingredients"), min_entries=1)
     add_ingredient = SubmitField("Add Ingredient")
@@ -30,7 +29,6 @@ class RecipeForm(FlaskForm):
     add_tag = SubmitField("Add Tag")
     status = RadioField("Status", choices=["Pending", "Published"])
     submit = SubmitField("Save")
-
 
 class Recipe:
     def __init__(

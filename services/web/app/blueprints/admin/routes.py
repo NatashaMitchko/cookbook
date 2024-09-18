@@ -1,10 +1,11 @@
 from io import BytesIO
-import json
+import os, json
 from datetime import datetime
 
-from flask import Blueprint, render_template, redirect, url_for, send_file
-
+from flask import Blueprint, render_template, redirect, url_for, flash, send_file, current_app
 from flask_login import login_required
+from werkzeug.utils import secure_filename
+
 from app.model.recipe import (
     RecipeForm,
     Recipe,
@@ -14,6 +15,7 @@ from app.model.recipe import (
     get_all_recipes,
     delete_recipe,
 )
+import app.utility.backup_restore as b
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="templates")
 
@@ -85,6 +87,24 @@ def edit_recipe(slug):
         r.save()
         return redirect(url_for("admin_bp.index", slug=r.slug))
     return render_template("new_recipe.html", title="Edit Recipe", edit=True, form=form)
+
+
+@admin_bp.route("/backup", methods=["GET", "POST"])
+@login_required
+def backup():
+    form = b.RecipeBackupFileForm()
+    if form.validate_on_submit():
+        f = form.backup.data
+        filename = secure_filename(f.filename)
+        f.save(os.path.join(
+            current_app.config["BACKUP_FOLDER"], filename
+        ))
+        flash("Backup saved successfully.")
+        if form.restore.data:
+            fc = b.restore_from_backup(filename)
+            flash(f"Restore Failure Count: {fc}")
+        return redirect(url_for("admin_bp.index"))
+    return render_template("bulk_upload.html", title="Backup", form=form)
 
 
 @admin_bp.route("/download")
