@@ -6,15 +6,14 @@ from flask_login import login_required, logout_user, login_user
 
 import app.model.user as user
 
+from app.utility.http import url_has_allowed_host_and_scheme
+
 
 auth_bp = Blueprint("auth_bp", __name__, template_folder="templates")
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    """
-    Hydrates user object given a user id
-    """
     return user.get_user_by_id(user_id)
 
 
@@ -26,7 +25,8 @@ def login():
             u = user.get_user(form.username.data)
             if login_user(u):
                 target = request.args.get("next")
-                # TODO: Validate target url
+                if not url_has_allowed_host_and_scheme(target, request.host):
+                    return redirect(url_for("admin_bp.index"))
                 return redirect(target or url_for("admin_bp.index"))
         else:
             flash("Incorrect credentials, try again")
@@ -42,7 +42,7 @@ def register():
         user.save_user(form.username.data, form.password.data)
         flash("YOURE REGISTERED")
         return redirect(url_for("auth_bp.login"))
-    
+
     if user.user_limit_reached():
         return "There's only one user allowed and it's not YOU!"
     return render_template("login_form.html", title="Register", form=form)

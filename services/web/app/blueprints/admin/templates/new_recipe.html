@@ -31,23 +31,23 @@
     {% for i in form.ingredients %}
       {{ i(class_="form-control") }}
     {% endfor %}
-    {{ form.add_ingredient(class_="btn btn-outline-secondary") }}
+    {{ form.add_ingredient(class_="btn") }}
 
     <!-- Steps  -->
     {{ form.steps.label(class_="form-label") }}
     {% for s in form.steps %}
       {{ s(class_="form-control") }}
     {% endfor %}
-    {{ form.add_step(class_="btn btn-outline-secondary") }}
+    {{ form.add_step(class_="btn") }}
 
     <!-- Tags -->
     {{ form.tags.label(class_="form-label") }}
     {% for t in form.tags %}
       {{ t(class_="form-control") }}
     {% endfor %}
-    {{ form.add_tag(class_="btn btn-outline-secondary") }}
+    {{ form.add_tag(class_="btn") }}
 
-    {{ form.submit(class_="btn btn-primary btn-block") }}
+    {{ form.submit(class_="btn") }}
 
   </form>
   <div style="height: 500px;"></div>

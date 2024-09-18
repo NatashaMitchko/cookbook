@@ -144,6 +144,15 @@ a {
     font-size: 14px;
 }
 
+.message {
+    display: flex;
+    flex-direction: column;
+    color: var(--redwood);
+    font-weight: 500;
+    align-content: center;
+    align-items: center;
+}
+
 .form {
     display: flex;
     flex-direction: column;
@@ -162,7 +171,8 @@ fieldset {
     font-weight: 700;
 }
 
-.form input[type="text"] {
+.form input[type="text"],
+.form input[type="password"] {
     margin-bottom: 5px;
     background: var(--offwhite);
     border: 1px solid var(--light-blue);
