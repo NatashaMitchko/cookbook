@@ -4,9 +4,8 @@
   <head>
     <title>{{ title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
-    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+    {% block datatables %}{% endblock %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles.css') }}">
   </head>
 
   <body>
@@ -19,7 +18,7 @@
         <a class="btn" href="{{ url_for('admin_bp.backup')}}">Upload</a>
         <a class="btn" href="{{ url_for('admin_bp.download')}}">Download</a>
         {% endif %}
-        <a class="btn" href="{{ url_for('admin_bp.recipe') }}">New Recipe</a>
+        <a class="btn" href="{{ url_for('admin_bp.new') }}">New Recipe</a>
         {% if current_user.is_authenticated %}
         <a class="btn" href="{{ url_for('auth_bp.logout') }}">Logout</a>
         {% else %}

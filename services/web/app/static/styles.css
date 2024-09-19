@@ -41,7 +41,7 @@ body {
     --redwood: #b02a29;
     --macadamia: #f6f0d8;
     --offwhite: #fffef9;
-    --blush: #ffe6eb;
+    --blush: rgb(255, 230, 235);
     --blue: #113047;
     --light-blue: #7390b9;
 
@@ -55,6 +55,17 @@ body {
 
 table.display {
     max-width: 1000px;
+}
+
+th.slug,
+td.slug {
+    display: none;
+}
+
+/* Selected row color */
+:root {
+    --dt-row-selected: 255, 230, 235;
+    --dt-row-selected-text: 0, 0, 0;
 }
 
 .header {
@@ -118,18 +129,22 @@ nav a {
     color: var(--redwood);
 }
 
-a {
+a,
+button {
     color: var(--blue);
 }
 
-.btn {
+.btn,
+.dt-button {
     border: 2px solid var(--redwood);
     color: var(--redwood);
     padding: 2px 6px;
-    text-decoration: none;;
+    text-decoration: none;
+    background-color: var(--blush);
 }
 
-.btn:hover {
+.btn:hover,
+.dt-button:hover {
     color: var(--offwhite);
     background-color: var(--blue);
     border: 2px solid var(--blue);

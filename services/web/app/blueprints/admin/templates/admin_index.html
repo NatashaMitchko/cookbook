@@ -1,12 +1,27 @@
 {% extends "base.html" %}
 
+{% block datatables %}
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/select/2.1.0/css/select.dataTables.css" />
+
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.7.1.min.js"
+  integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/2.1.0/js/dataTables.select.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/select/2.1.0/js/select.dataTables.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.2/js/dataTables.buttons.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/3.1.2/js/buttons.dataTables.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="container-desktop">
   <table id="admin-table" class="display">
     <thead>
       <tr>
+        <th></th>
+        <th class="slug">Slug</th>
         <th>Title</th>
-        <th>Slug/ Live Link</th>
+        <th>Live Link</th>
         <th>Description</th>
         <th>Tags</th>
         <th>Status</th>
@@ -17,27 +32,29 @@
     <tbody>
       {% for r in recipes %}
       <tr>
-      <td>{{ r.title }}</td>
-      <td>
+        <td></td>
+        <td class="slug">{{ r.slug }}</td>
+        <td>{{ r.title }}</td>
+        <td>
+          {% if r.status.name == 'PUBLISHED' %}
+          <a href="{{ url_for('recipe_bp.render_recipe', slug=r.slug) }}">{{ r.slug }}</a>
+          {% else %}
+          {{ r.slug }}
+          {% endif %}
+        </td>
+        <td>{{ r.description }}</td>
+        <td>
+          {% for t in r.tags %}
+          <span class="tag">{{ t }}</span>
+          {% endfor %}
+        </td>
         {% if r.status.name == 'PUBLISHED' %}
-        <a href="{{ url_for('recipe_bp.render_recipe', slug=r.slug) }}">{{ r.slug }}</a>
+        <td><span class="card-status">{{ r.status.name }}</span></td>
         {% else %}
-        {{ r.slug }}
+        <td class="status--pending"><span class="card-status">{{ r.status.name }}</span></td>
         {% endif %}
-      </td>
-      <td>{{ r.description }}</td>
-      <td>
-        {% for t in r.tags %}
-        <span class="tag">{{ t }}</span>
-        {% endfor %}
-      </td>
-      {% if r.status.name == 'PUBLISHED' %}
-      <td><span class="card-status">{{ r.status.name }}</span></td>
-      {% else %}
-      <td class="status--pending"><span class="card-status">{{ r.status.name }}</span></td>
-        {% endif %}
-      <td><a href="{{ url_for('admin_bp.preview_recipe', slug=r.slug) }}">Preview</a></td>
-      <td><a href="{{ url_for('admin_bp.edit_recipe', slug=r.slug) }}">Edit</a></td>
+        <td><a href="{{ url_for('admin_bp.preview_recipe', slug=r.slug) }}">Preview</a></td>
+        <td><a href="{{ url_for('admin_bp.edit_recipe', slug=r.slug) }}">Edit</a></td>
       </tr>
       {% endfor %}
     </tbody>
@@ -46,29 +63,84 @@
 
 <div class="container-mobile">
   {% for r in recipes %}
-    <div class="card">
-      <p class="card-title"><a href="{{ url_for('admin_bp.edit_recipe', slug=r.slug) }}">{{ r.title }}</a></p>
-      {% if r.status.name == 'PUBLISHED' %}
-        <div class="card-details">
-          <p class="card-link"><a href="{{ url_for('recipe_bp.render_recipe', slug=r.slug) }}">View</a></p>
-          <p class="card-status">{{ r.status.name }}</p>
-        </div>
-        {% else %}
-        <div class="card-details status--pending">
-          <p class="card-status">{{ r.status.name }}</p>
-        </div>
-        {% endif %}
+  <div class="card">
+    <p class="card-title"><a href="{{ url_for('admin_bp.edit_recipe', slug=r.slug) }}">{{ r.title }}</a></p>
+    {% if r.status.name == 'PUBLISHED' %}
+    <div class="card-details">
+      <p class="card-link"><a href="{{ url_for('recipe_bp.render_recipe', slug=r.slug) }}">View</a></p>
+      <p class="card-status">{{ r.status.name }}</p>
     </div>
+    {% else %}
+    <div class="card-details status--pending">
+      <p class="card-status">{{ r.status.name }}</p>
+    </div>
+    {% endif %}
+  </div>
   {% endfor %}
 </div>
 
 {% endblock %}
 {% block scripts%}
 <script>
+  function selected_rows(table) {
+    var rows = table.rows({ selected: true }).indexes();
+    // console.log(table.cells( rows, 1 ).data());
+    const numSelected = table.cells(rows, 1).data().length;
+    const arr = [];
+    for (let i = 0; i < numSelected; i++) {
+      arr.push(table.cells(rows, 1).data()[i]);
+    }
+    return arr
+  }
+
+  const bulkURL = {{ url_for("admin_bp.bulk") | tojson }}
+
+
+  var adminTable;
+
   $(document).ready(function () {
-    $('#admin-table').DataTable({
-      "pageLength": 50
+
+    adminTable = new DataTable('#admin-table', {
+      pageLength: 50,
+      columnDefs: [
+        {
+          orderable: false,
+          render: DataTable.render.select(),
+          targets: 0
+        }
+      ],
+      select: {
+        style: 'multi',
+        selector: 'td:first-child'
+      },
+      order: [[1, 'asc']],
+      layout: {
+        topStart: {
+          buttons: [
+            {
+              text: 'Add Tag',
+              action: function (e, dt, node, config) {
+                let slugs = selected_rows(dt);
+                let tag = prompt("Tag");
+                fetch(bulkURL, {
+                  method: "POST",
+                  body: JSON.stringify({ "action": "tag", "slugs": slugs, "tag": tag }),
+                }).then((response) => {
+                  if (response.status === 200) {
+                    window.location.reload();
+                  } else if (response.status === 500) {
+                    console.log("noooooo");
+                  }
+                })
+              }
+            }
+          ]
+        }
+      },
     });
+
+    selected_rows(adminTable);
+
   });
 </script>
 

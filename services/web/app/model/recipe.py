@@ -106,3 +106,9 @@ def delete_recipe(slug) -> bool:
 def get_recipe_slugs():
     _, keys = redis_client.scan_iter(match="recipe:*")
     return [slug.decode("utf-8")[7:] for slug in keys]
+
+def add_tag_to_recipes(tag, slugs):
+    for slug in slugs:
+        r = get_recipe(slug)
+        r.tags.add(tag)
+        r.save()
