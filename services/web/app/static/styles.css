@@ -145,6 +145,7 @@ a {
 }
 
 .message {
+    font-family: monospace;
     display: flex;
     flex-direction: column;
     color: var(--redwood);

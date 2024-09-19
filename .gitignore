@@ -2,3 +2,5 @@
 env/
 *.prod
 services/web/app/backup/*
+script_env/
+backups/*

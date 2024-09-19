@@ -93,11 +93,10 @@ def get_all_recipes() -> List[Recipe]:
     return res
 
 def get_all_json_recipies() -> str:
-    _, keys = redis_client.scan(match="recipe:*")
-    data = redis_client.mget(keys)
     res = []
-    for d in data:
-        r_dict = json.loads(d.decode("utf-8"))
+    for key in redis_client.scan_iter(match="recipe:*"):
+        data = redis_client.get(key)
+        r_dict = json.loads(data.decode("utf-8"))
         res.append(r_dict)
     return res
 
@@ -105,5 +104,5 @@ def delete_recipe(slug) -> bool:
     redis_client.delete(f"recipe:{slug}")
 
 def get_recipe_slugs():
-    _, keys = redis_client.scan(match="recipe:*")
+    _, keys = redis_client.scan_iter(match="recipe:*")
     return [slug.decode("utf-8")[7:] for slug in keys]

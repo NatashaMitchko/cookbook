@@ -28,6 +28,8 @@ def login():
                 if not url_has_allowed_host_and_scheme(target, request.host):
                     return redirect(url_for("admin_bp.index"))
                 return redirect(target or url_for("admin_bp.index"))
+            else:
+                flash("login_user failed")
         else:
             flash("Incorrect credentials, try again")
     return render_template("login_form.html", title="Login", form=form)

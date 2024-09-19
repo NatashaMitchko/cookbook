@@ -66,7 +66,9 @@
 {% block scripts%}
 <script>
   $(document).ready(function () {
-    $('#admin-table').DataTable();
+    $('#admin-table').DataTable({
+      "pageLength": 50
+    });
   });
 </script>
 

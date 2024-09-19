@@ -16,7 +16,7 @@
         {% if request.url_rule.endpoint != "admin_bp.index" %}
         <a class="btn" href="{{ url_for('admin_bp.index')}}">Dashboard</a>
         {% else %}
-        <a class="btn" href="{{ url_for('recipe_bp.index')}}">Cookbook Home</a>
+        <a class="btn" href="{{ url_for('admin_bp.backup')}}">Upload</a>
         <a class="btn" href="{{ url_for('admin_bp.download')}}">Download</a>
         {% endif %}
         <a class="btn" href="{{ url_for('admin_bp.recipe') }}">New Recipe</a>

@@ -1,6 +1,7 @@
 from io import BytesIO
 import os, json
 from datetime import datetime
+from typing import List
 
 from flask import Blueprint, render_template, redirect, url_for, flash, send_file, current_app
 from flask_login import login_required
@@ -25,6 +26,13 @@ def index():
     recipes = get_all_recipes()
     return render_template("admin_index.html", title="Admin Dashboard", recipes=recipes)
 
+def remove_empties(input: List[str]) -> List[str]:
+    result = []
+    for x in input:
+        if x == "":
+            continue
+        result.append(x)
+    return result
 
 @admin_bp.route("/recipe/new/", methods=["GET", "POST"])
 @login_required
@@ -43,9 +51,9 @@ def recipe():
             title=form.title.data,
             slug=form.slug.data,
             description=form.description.data,
-            ingredients=[i.data for i in form.ingredients],
-            steps=[s.data for s in form.steps],
-            tags=[t.data for t in form.tags],
+            ingredients=remove_empties([i.data for i in form.ingredients]),
+            steps=remove_empties([s.data for s in form.steps]),
+            tags=remove_empties([t.data for t in form.tags]),
             status=(
                 PublishStatus.PENDING
                 if form.status.data == "Pending"
@@ -53,7 +61,7 @@ def recipe():
             ),
         )
         r.save()
-        return redirect(url_for("admin_bp.index", slug=r.slug))
+        return redirect(url_for("admin_bp.index"))
     return render_template("new_recipe.html", title="New Recipe", edit=False, form=form)
 
 
@@ -61,6 +69,7 @@ def recipe():
 @login_required
 def edit_recipe(slug):
     json_r = get_recipe_json(slug)
+    json_r["status"] = json_r["status"].title()
     form = RecipeForm(data=json_r)
 
     if form.add_ingredient.data:
@@ -75,9 +84,9 @@ def edit_recipe(slug):
             title=form.title.data,
             slug=slug,
             description=form.description.data,
-            ingredients=[i.data for i in form.ingredients],
-            steps=[s.data for s in form.steps],
-            tags=[t.data for t in form.tags],
+            ingredients=remove_empties([i.data for i in form.ingredients]),
+            steps=remove_empties([s.data for s in form.steps]),
+            tags=remove_empties([t.data for t in form.tags]),
             status=(
                 PublishStatus.PENDING
                 if form.status.data == "Pending"
@@ -85,7 +94,7 @@ def edit_recipe(slug):
             ),
         )
         r.save()
-        return redirect(url_for("admin_bp.index", slug=r.slug))
+        return redirect(url_for("admin_bp.index"))
     return render_template("new_recipe.html", title="Edit Recipe", edit=True, form=form)
 
 
@@ -127,7 +136,6 @@ def download():
 
 
 @admin_bp.route("/delete/<slug>")
-@login_required
 @login_required
 def delete(slug):
     delete_recipe(slug)
