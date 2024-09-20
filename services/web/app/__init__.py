@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask
 from flask_redis import FlaskRedis
 from flask_login import LoginManager
 import json
@@ -13,6 +13,7 @@ def create_app():
     app.url_map.strict_slashes = False
 
     redis_client.init_app(app)
+
     login_manager.init_app(app)
     login_manager.login_view = "auth_bp.login"
 
@@ -29,17 +30,3 @@ def create_app():
     app.register_blueprint(recipe_bp, url_prefix="/recipe")
 
     return app
-
-
-app = create_app()
-
-
-@app.route("/healthcheck")
-def healthcheck():
-    return {"ping": "pong"}
-
-
-@app.route("/redis-test")
-def redis_test():
-    redis_client.set("hello", json.dumps({"hello": "world"}))
-    return redis_client.get("hello")

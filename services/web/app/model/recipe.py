@@ -41,7 +41,7 @@ class Recipe:
         tags: List[str],
         status: PublishStatus,
     ) -> None:
-        self.title = title
+        self.title = title.title()
         self.slug = slug
         self.description = description
         self.ingredients = ingredients
@@ -51,7 +51,7 @@ class Recipe:
 
     def save(self):
         recipe = {
-            "title": self.title.title(),
+            "title": self.title,
             "slug": self.slug,
             "description": self.description,
             "ingredients": self.ingredients,

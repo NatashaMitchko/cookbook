@@ -1,6 +1,7 @@
-.env.prod
 env/
+testenv/
+script_env/
+.env.prod
 *.prod
 services/web/app/backup/*
-script_env/
 backups/*
