@@ -1,17 +1,8 @@
 import os, json
 
 from flask import current_app
-from flask_wtf import FlaskForm
-from flask_wtf.file import FileField, FileRequired
-from wtforms import BooleanField, SubmitField
 
 from app.model.recipe import get_recipe_object
-
-
-class RecipeBackupFileForm(FlaskForm):
-    backup = FileField(validators=[FileRequired()])
-    restore = BooleanField("Yes")
-    submit = SubmitField("Save")
 
 
 def restore_from_backup(filename) -> int:

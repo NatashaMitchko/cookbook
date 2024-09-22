@@ -17,6 +17,7 @@ from flask_login import login_required
 from werkzeug.utils import secure_filename
 
 import app.model.recipe as recipe
+import app.model.forms as forms
 import app.utility.backup_restore as b
 
 admin_bp = Blueprint("admin_bp", __name__, template_folder="templates")
@@ -40,7 +41,7 @@ def remove_empties(input: List[str]) -> List[str]:
 @admin_bp.route("/recipe/new/", methods=["GET", "POST"])
 @login_required
 def new():
-    form = recipe.RecipeForm()
+    form = forms.RecipeForm()
 
     if form.add_ingredient.data:
         form.ingredients.append_entry(None)
@@ -73,7 +74,7 @@ def new():
 def edit_recipe(slug):
     json_r = recipe.get_recipe_json(slug)
     json_r["status"] = json_r["status"].title()
-    form = recipe.RecipeForm(data=json_r)
+    form = forms.RecipeForm(data=json_r)
 
     if form.add_ingredient.data:
         form.ingredients.append_entry(None)
@@ -104,7 +105,7 @@ def edit_recipe(slug):
 @admin_bp.route("/backup", methods=["GET", "POST"])
 @login_required
 def backup():
-    form = b.RecipeBackupFileForm()
+    form = forms.RecipeBackupFileForm()
     if form.validate_on_submit():
         f = form.backup.data
         filename = secure_filename(f.filename)

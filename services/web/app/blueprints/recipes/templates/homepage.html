@@ -1,0 +1,26 @@
+{% extends "cookbook_base.html" %}
+
+{% block content %}
+<div class="paper">
+    <header class="header">
+        <h1>{{ title }}</h1>
+    </header>
+    <div class="card-container">
+        {% for r in recipes %}
+        <div class="recipe-card">
+            <a href="{{ url_for('recipe_bp.render_recipe', slug=r.slug) }}" class="recipe-title">{{ r.title }}</a>
+            <div>
+                {% for t in r.tags %}
+                {% if loop.last %}
+                <a href="{{ url_for('recipe_bp.homepage', tag=t.lower()) }}">{{ t.title() }}</a>
+                {% else %}
+                <a href="{{ url_for('recipe_bp.homepage', tag=t.lower()) }}">{{ t.title() }},</a>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+        <div style="height:15px;"></div>
+    </div>
+</div>
+{% endblock %}

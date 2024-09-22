@@ -27,6 +27,6 @@ def create_app():
 
     from app.blueprints.recipes.routes import recipe_bp
 
-    app.register_blueprint(recipe_bp, url_prefix="/recipe")
+    app.register_blueprint(recipe_bp, url_prefix="/")
 
     return app

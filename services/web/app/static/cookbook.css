@@ -1,0 +1,57 @@
+body {
+    font-family: 'Nimbus Mono PS', 'Courier New', monospace;
+    font-weight: normal;
+    --ink: #27273d;
+    background-image: url(VeneerWhiteOakRandomMatched001_COL_2K_SPECULAR.png);
+
+    color: var(--ink);
+}
+
+.paper {
+    background-color: antiquewhite;
+    width: 800px;
+    margin: 0 auto;
+    border-top: 14px dotted #cda889;
+}
+
+.header {
+    text-align: center;
+    padding: 1rem 0 0;
+}
+
+.card-container {
+    display: flex;
+    flex-direction: column;
+    width:800px;
+    gap: 10px;
+    margin: 0 auto;
+}
+
+.recipe-card {
+    border-bottom: 2px dotted var(--ink);
+    margin: 4px 10px 0 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.recipe-card a {
+    text-decoration: none;
+    color: var(--ink);
+    margin: 5px;
+    transition: 80ms ease;
+    display: inline-block;
+}
+
+.recipe-card a:hover {
+    font-style: italic;
+}
+
+.recipe-title {
+    font-weight: bold;
+    font-size: large;
+}
+
+.recipe-tags {
+    font-weight: lighter;
+    font-style: italic;
+}

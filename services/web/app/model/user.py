@@ -1,44 +1,15 @@
 import bcrypt
 import json
 import uuid
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
 from flask_login import UserMixin
 
 from app import redis_client
-
-
-class LoginForm(FlaskForm):
-    username = StringField("Username")
-    password = PasswordField("Password")
-    submit = SubmitField("Login")
-
-
-class RegisterForm(FlaskForm):
-    username = StringField("Username")
-    password = PasswordField("Password")
-    submit = SubmitField("Register")
 
 
 class User(UserMixin):
     def __init__(self, id: str, username: str) -> None:
         self.id = id
         self.username = username
-
-    # def get_id(self) -> str:
-    #     return self.id
-
-    # @property
-    # def is_active(self):
-    #     return True
-
-    # @property
-    # def is_authenticated(self):
-    #     return True
-
-    # @property
-    # def is_anonymous(self):
-    #     return False
 
 
 def user_limit_reached():

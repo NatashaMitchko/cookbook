@@ -3,32 +3,16 @@ from typing import List
 import json
 import re
 
-from flask_wtf import FlaskForm
-from wtforms import StringField, FieldList, RadioField, SubmitField
-from wtforms.validators import DataRequired, Optional, ValidationError
-
 from app import redis_client
 
 class PublishStatus(Enum):
     PENDING = 1
     PUBLISHED = 2
 
-def slug_check(form, field):
-    if not re.search("^[a-zA-Z]*(-?[a-zA-Z]+)*$", field.data):
-        raise ValidationError("Slug must not have spaces (e.g. this-is-a-slug)")
-
-class RecipeForm(FlaskForm):
-    title = StringField("Title", validators=[DataRequired()])
-    slug = StringField("Slug", validators=[DataRequired(), slug_check])
-    description = StringField("Description", validators=[Optional()])
-    ingredients = FieldList(StringField("Ingredients"), min_entries=1)
-    add_ingredient = SubmitField("Add Ingredient")
-    steps = FieldList(StringField("Steps"), min_entries=1)
-    add_step = SubmitField("Add Step")
-    tags = FieldList(StringField("Tags"), min_entries=1)
-    add_tag = SubmitField("Add Tag")
-    status = RadioField("Status", choices=["Pending", "Published"])
-    submit = SubmitField("Save")
+def is_valid_slug(s: str) -> bool:
+    if re.search("^[a-zA-Z]+(-?[a-zA-Z]+)*$", s):
+        return True
+    return False
 
 class Recipe:
     def __init__(
@@ -51,7 +35,7 @@ class Recipe:
 
     def save(self):
         recipe = {
-            "title": self.title,
+            "title": self.title.title(),
             "slug": self.slug,
             "description": self.description,
             "ingredients": self.ingredients,
@@ -83,13 +67,18 @@ def get_recipe_json(slug) -> dict:
         return {}
     return json.loads(recipe_str)
 
-def get_all_recipes() -> List[Recipe]:
+def get_all_recipes(published_only=False) -> List[Recipe]:
     res = []
     for key in redis_client.scan_iter(match="recipe:*"):
         data = redis_client.get(key)
         r_dict = json.loads(data.decode("utf-8"))
+
         r = get_recipe_object(r_dict)
-        res.append(r)
+        if published_only and r.status == PublishStatus.PUBLISHED:
+            res.append(r)
+        elif not published_only:
+            res.append(r)
+
     return res
 
 def get_all_json_recipies() -> str:
@@ -102,10 +91,6 @@ def get_all_json_recipies() -> str:
 
 def delete_recipe(slug) -> bool:
     redis_client.delete(f"recipe:{slug}")
-
-def get_recipe_slugs():
-    _, keys = redis_client.scan_iter(match="recipe:*")
-    return [slug.decode("utf-8")[7:] for slug in keys]
 
 def add_tag_to_recipes(tag, slugs):
     for slug in slugs:
