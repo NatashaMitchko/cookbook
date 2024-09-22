@@ -6,7 +6,7 @@
         <div class="recipe-full">
             <div class="recipe-full-title">
                 <h1>{{ recipe.title }}</h1>
-                <a href="{{ url_for('recipe_bp.homepage') }}" style="font-size: xx-large;" aria-hidden="true">&times;</a>
+                <a href="{{ url_for('recipe_bp.homepage') }}" style="font-size: xx-large;" class="no-print" aria-hidden="true">&times;</a>
             </div>
             <p>{{ recipe.description }}</p>
             <div class="recipe-content">

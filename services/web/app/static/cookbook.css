@@ -45,10 +45,6 @@ body {
     border-bottom: 2px dotted var(--ink);
 }
 
-.recipe-full-title h1 {
-    margin-bottom: 0px;
-}
-
 .recipe-full-title a {
     text-decoration: none;
 }
@@ -90,3 +86,16 @@ body {
         font-size: medium;
     }
 }
+
+@media print {
+    body {
+        background-image: none;
+    }
+    .paper {
+       border: none;
+       background-color: white;
+    }
+    .no-print {
+        visibility: hidden;
+    }
+ }
