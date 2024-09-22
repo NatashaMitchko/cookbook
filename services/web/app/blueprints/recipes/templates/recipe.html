@@ -1,5 +1,25 @@
-{% extends "base.html" %}
+{% extends "cookbook_base.html" %}
 
 {% block content %}
-{{ recipe.__dict__ }}
+<div class="paper">
+    <div class="card-container">
+        <div class="recipe-full">
+            <div class="recipe-full-title">
+                <h1>{{ recipe.title }}</h1>
+                <a href="{{ url_for('recipe_bp.homepage') }}" style="font-size: xx-large;" aria-hidden="true">&times;</a>
+            </div>
+            <p>{{ recipe.description }}</p>
+            <div class="recipe-content">
+            <ul>
+                {% for i in recipe.ingredients %}
+                <li>{{ i }}</li>
+                {% endfor %}
+            </ul>
+                {% for s in recipe.steps %}
+                <p>{{ s }}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -2,7 +2,7 @@ body {
     font-family: 'Nimbus Mono PS', 'Courier New', monospace;
     font-weight: normal;
     --ink: #27273d;
-    background-image: url(VeneerWhiteOakRandomMatched001_COL_2K_SPECULAR.png);
+    background-image: url(Poliigon_WoodVeneerOak_7760_BaseColor.jpg);
 
     color: var(--ink);
 }
@@ -22,7 +22,7 @@ body {
 .card-container {
     display: flex;
     flex-direction: column;
-    width:800px;
+    width: 800px;
     gap: 10px;
     margin: 0 auto;
 }
@@ -34,7 +34,32 @@ body {
     justify-content: space-between;
 }
 
-.recipe-card a {
+.recipe-full {
+    margin: 10px 80px;
+    font-size: large;
+}
+
+.recipe-full-title {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 2px dotted var(--ink);
+}
+
+.recipe-full-title h1 {
+    margin-bottom: 0px;
+}
+
+.recipe-full-title a {
+    text-decoration: none;
+}
+
+.recipe-content {
+    font-family: Seravek, 'Gill Sans Nova', Ubuntu, Calibri, 'DejaVu Sans', source-sans-pro, sans-serif;
+    font-weight: normal;
+}
+
+.recipe-title,
+.recipe-tags {
     text-decoration: none;
     color: var(--ink);
     margin: 5px;
@@ -42,7 +67,8 @@ body {
     display: inline-block;
 }
 
-.recipe-card a:hover {
+.recipe-title:hover,
+.recipe-tags:hover {
     font-style: italic;
 }
 
@@ -51,7 +77,16 @@ body {
     font-size: large;
 }
 
-.recipe-tags {
-    font-weight: lighter;
-    font-style: italic;
+@media (max-width: 812px) {
+    .card-container,
+    .paper {
+        width: 100%;
+    }
+    .recipe-tags {
+        display: none;
+    }
+    .recipe-full {
+        margin: 10px 20px;
+        font-size: medium;
+    }
 }
